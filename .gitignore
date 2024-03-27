@@ -1,1 +1,11 @@
-accounts
+# personal data
+log.txt
+success.txt
+
+# specific data
+host.txt
+password.txt
+account_prefix.txt
+
+# need generate manually
+numbers.txt
