@@ -46,7 +46,7 @@ login() {
         -H 'Connection: keep-alive' \
         -H 'Referer: http://<some_addr>/a70.htm?isReback=1' \
         -H 'Upgrade-Insecure-Requests: 1' \
-        -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' \
+        -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
         -i -s --interface "$3"
 }
 
