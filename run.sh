@@ -4,12 +4,20 @@ log_file_name="log.txt"
 numbers_file_name="numbers.txt"
 success_number_file_name="success.txt"
 
-current_if=""
-
 host=$(cat host.txt)
 account_prefix=$(cat account_prefix.txt)
 password=$(cat password.txt)
 
+interfaces=(
+    "eth0"
+    "vth0"
+    "vth1"
+    "vth2"
+    "vth3"
+    "vth4"
+    "vth5"
+)
+current_if=""
 
 log() {
     current_time=$(date "+%Y/%m/%d %T")
@@ -22,32 +30,18 @@ log_success () {
 }
 
 choose_if() {
-    log "choosing interface to login"
-    response_vth0=$(curl "www.baidu.com" -s --interface "vth0")
-    response_vth1=$(curl "www.baidu.com" -s --interface "vth1")
-    response_vth2=$(curl "www.baidu.com" -s --interface "vth2")
-    if [ -n "$response_vth0" ]; then
-        log "vth0 up"
-    else
-        log "vth0 down, ready to login"
-        current_if="vth0"
-        return
-    fi
-    if [ -n "$response_vth1" ]; then
-        log "vth1 up"
-    else
-        log "vth1 down, ready to login"
-        current_if="vth1"
-        return
-    fi
-    if [ -n "$response_vth2" ]; then
-        log "vth2 up"
-    else
-        log "vth2 down, ready to login"
-        current_if="vth2"
-        return
-    fi
-    log "all interfaces up"
+    log "Choosing interface to login."
+    for interface in "${interfaces[@]}"; do
+        is_logged_in=$(bash get_interface_info.sh "$interface" | grep "yes")
+        if [ -n "$is_logged_in" ]; then
+            log "Interface $interface up."
+        else
+            log "Interface $interface down, ready to login."
+            current_if="$interface"
+            return
+        fi
+    done
+    log "All interfaces up."
     exit 0
 }
 
@@ -58,7 +52,7 @@ login() {
         -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
         -H 'Accept-Language: zh-CN,zh;q=0.9' \
         -H 'Connection: keep-alive' \
-        -H 'Referer: http://'$host'/a70.htm?isReback=1' \
+        -H 'Referer: http://'"$host"'/a70.htm?isReback=1' \
         -H 'Upgrade-Insecure-Requests: 1' \
         -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
         -i -s --interface "$3"
