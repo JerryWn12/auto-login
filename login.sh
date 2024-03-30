@@ -19,7 +19,7 @@ res=$(curl "http://$host/login?DDDDD=$1&upass=$2&R1=0&R2=&R3=2&R6=0&para=00&0MKK
         -H 'Referer: http://'$host'/a70.htm?isReback=1' \
         -H 'Upgrade-Insecure-Requests: 1' \
         -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
-        -s --interface "$3")
+        -i -s --interface "$3")
 
 length=$(echo "$res" | grep -i 'Content-length:')
 

@@ -14,7 +14,7 @@ res=$(curl "http://40.11.3.2" \
         -H 'Connection: keep-alive' \
         -H 'Upgrade-Insecure-Requests: 1' \
         -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
-        -s --interface "$1")
+        -i -s --interface "$1")
 
 uid=$(echo "$res" | grep "uid=")
 
