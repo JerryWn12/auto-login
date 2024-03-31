@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 log_file_name="run.log"
 numbers_file_name="numbers.txt"
