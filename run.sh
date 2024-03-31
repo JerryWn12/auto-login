@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-log_file_name="log.txt"
+log_file_name="run.log"
 numbers_file_name="numbers.txt"
 success_number_file_name="success.txt"
 

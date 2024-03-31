@@ -13,6 +13,6 @@
 6. `bash run.sh`
 
 tips
-> Lively view log file with `tail -f log.txt`, successfully scanned account will be stored in `success.txt`.
+> Lively view log file with `tail -f run.log`, successfully scanned account will be stored in `success.txt`.
 > 
 > Use `nohup` to run command in backround, for large storage device, instead of with `screen` is recommended.
