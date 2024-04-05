@@ -3,7 +3,7 @@
 host=$(cat host.txt)
 
 if [ -z "$host" ]; then
-    echo "No host file was found, please create host.txt and put the login host in there."
+    echo "No host.txt file was found, please create it and put the login host in there."
     exit 0
 fi
 

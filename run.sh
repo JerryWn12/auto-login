@@ -25,12 +25,12 @@ log() {
 }
 
 if [ ! -f "$numbers_file_name" ]; then
-    log "The numbers.txt file does not exist! Please generate it first."
+    log "Error: The numbers.txt file does not exist! Please generate it first."
     exit 0
 fi
 
 if [ ! -s "$numbers_file_name" ]; then
-    log "The numbers.txt file is empty! Please re-generate it."
+    log "Error: The numbers.txt file is empty! Please re-generate it."
     exit 0
 fi
 
@@ -40,18 +40,18 @@ log_success () {
 }
 
 choose_if() {
-    log "Choosing interface to login."
+    log "Info: Choosing interface to login."
     for interface in "${interfaces[@]}"; do
         is_logged_in=$(bash get_interface_info.sh "$interface" | grep "yes")
         if [ -n "$is_logged_in" ]; then
-            log "Interface $interface up."
+            log "Info: Interface $interface up."
         else
-            log "Interface $interface down, ready to login."
+            log "Info: Interface $interface down, ready to login."
             current_if="$interface"
             return
         fi
     done
-    log "All interfaces up."
+    log "Info: All interfaces up."
     exit 0
 }
 
@@ -76,7 +76,7 @@ while IFS= read -r number; do
 
     account=$account_prefix$number
 
-    log "using account: $account, password $password"
+    log "Info: Using account: $account, password $password."
     response=$(login "$account" "$password" "$current_if")
 
     length=$(echo "$response" | grep -i 'Content-length:')
@@ -84,24 +84,25 @@ while IFS= read -r number; do
     if [ -n "$length" ]; then
 
         if [[ "$length" =~ Content-length:[[:space:]](3[0-9]*) ]]; then # login failed
-            log "length: ${BASH_REMATCH[1]}, login failed"
+            log "Info: Length: ${BASH_REMATCH[1]}, login failed."
             continue
 
         elif [[ "$length" =~ Content-length:[[:space:]](4[0-9]*) ]]; then # login success
-            log "length: ${BASH_REMATCH[1]}, login success"
+            log "Info: Length: ${BASH_REMATCH[1]}, login success."
             log_success "$account"
             choose_if
             continue
 
-        elif [[ "$length" =~ Content-length:[[:space:]](6[0-9]*) ]]; then # login system error
-            log "length: ${BASH_REMATCH[1]}, login system error"
+        # login system error, seems like only happens on browser
+        elif [[ "$length" =~ Content-length:[[:space:]](6[0-9]*) ]]; then
+            log "Info: Length: ${BASH_REMATCH[1]}, login system error."
             continue
         else
-            log "unknown content length: ${length:16}"
+            log "Error: Unknown content-length: ${length:16}."
         fi
 
     else
-        log "no content length header found: $response"
+        log "Error: No content-length header found: $response"
     fi
 
 done < "$numbers_file_name"
