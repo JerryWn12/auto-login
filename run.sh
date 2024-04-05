@@ -25,7 +25,7 @@ log() {
 }
 
 if [ ! -f "$numbers_file_name" ]; then
-    log "The numbers.txt file does not exist! Please generate first."
+    log "The numbers.txt file does not exist! Please generate it first."
     exit 0
 fi
 
