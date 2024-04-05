@@ -24,6 +24,16 @@ log() {
     echo "$current_time" "$1" >> "$log_file_name"
 }
 
+if [ ! -f "$numbers_file_name" ]; then
+    log "The numbers.txt file does not exist! Please generate first."
+    exit 0
+fi
+
+if [ ! -s "$numbers_file_name" ]; then
+    log "The numbers.txt file is empty! Please re-generate it."
+    exit 0
+fi
+
 log_success () {
     current_time=$(date "+%Y/%m/%d %T")
     echo "$current_time" "$1" >> "$success_number_file_name"
