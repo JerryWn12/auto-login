@@ -62,6 +62,8 @@ while IFS= read -r number; do
     sleep_time=$((RANDOM % 10 + 10)) # 10 - 20
     sleep $sleep_time
 
+    sed -i '1d' "$numbers_file_name"
+
     account=$account_prefix$number
 
     log "using account: $account, password $password"
